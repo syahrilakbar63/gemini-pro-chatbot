@@ -1,120 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Judul halaman web -->
     <title>AI Chat - SHARIL BOT</title>
+    <!-- Tautan ke stylesheet Bootstrap untuk penataan tampilan -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+Wy+8fP8uVS9AFZOEtIt0U1Yz12P1ck7mlf" crossorigin="anonymous">
-    <style>
-        body {
-            background-color: #343a40; /* Dark background color */
-            color: #ffffff; /* Light text color */
-        }
-
-        .chat-container {
-            max-width: 1000px; /* Updated width for chat container */
-            margin: 50px auto;
-            background-color: #212529; /* Dark chat container background color */
-            border: 1px solid #343a40; /* Dark border color */
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        .chat-box {
-            padding: 45px;
-            height: 400px;
-            overflow-y: auto;
-        }
-
-        .user-message, .bot-message {
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        .user-message {
-            text-align: right;
-            background-color: #007bff;
-            color: #ffffff;
-        }
-
-        .bot-message {
-            text-align: left;
-            background-color: #343a40;
-            color: #ffffff;
-        }
-
-        .input-box {
-            padding: 10px;
-            background-color: #212529; /* Dark input box background color */
-            border-top: 1px solid #343a40; /* Dark border color */
-            display: flex;
-            justify-content: space-between;
-        }
-
-        #userInput {
-            flex-grow: 1;
-            margin-right: 10px;
-            background-color: #343a40; /* Dark input field background color */
-            color: #ffffff; /* Light text color */
-            border: none;
-        }
-
-        .send-button {
-            background-color: #007bff;
-            color: #ffffff;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .send-button:hover {
-            background-color: #0056b3;
-        }
-
-        .copy-button {
-            background-color: #212529;
-            color: #ffffff;
-            border: none;
-            padding: 3px 6px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 10px;
-            margin-left: 5px;
-        }
-
-        .copy-button:hover {
-            background-color: #224b2b;
-        }
-    </style>
+    <!-- Tautan ke file CSS kustom -->
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <div class="container">
+    <!-- Kontainer obrolan utama -->
     <div class="chat-container">
         <div class="chat-box" id="chatBox">
-            <!-- Chat messages will be added here dynamically -->
+            <!-- Pesan obrolan akan ditambahkan di sini secara dinamis -->
         </div>
+        <!-- Kotak input untuk interaksi pengguna -->
         <div class="input-box">
-            <input type="text" id="userInput" class="form-control" placeholder="Type your message..." onkeydown="if (event.key === 'Enter') { event.preventDefault(); sendMessage(); }">
-            <button class="send-button" onclick="sendMessage()">Send</button>
-            <button class="btn btn-secondary mt-2" onclick="startNewChat()">Start New Chat</button>
+            <input type="text" id="userInput" class="form-control" placeholder="Ketik pesan Anda..." onkeydown="if (event.key === 'Enter') { event.preventDefault(); sendMessage(); }">
+            <!-- Tombol kirim memicu fungsi sendMessage -->
+            <button class="send-button" onclick="sendMessage()">Kirim</button>
+            <!-- Tombol untuk memulai obrolan baru, menghapus kotak obrolan -->
+            <button class="btn btn-secondary mt-2" onclick="startNewChat()">Mulai Obrolan Baru</button>
         </div>
     </div>
 </div>
 
-<!-- ... -->
-
+<!-- Bagian JavaScript untuk fungsionalitas dinamis -->
 <script>
+    // Array untuk menyimpan riwayat obrolan
     let chatHistory = [];
   
+    // Fungsi untuk mengirim input pengguna ke server
     async function sendMessage() {
       const userInput = document.getElementById('userInput').value;
   
-      // Send user input and chat history to the server
+      // Kirim input pengguna dan riwayat obrolan ke server
       const response = await fetch('/sendMessage', {
         method: 'POST',
         headers: {
@@ -125,45 +49,48 @@
   
       const data = await response.json();
   
-      // Update the chat history with the response
+      // Perbarui riwayat obrolan dengan respons
       chatHistory = data.chatHistory;
   
-      // Display the messages
+      // Tampilkan pesan-pesan
       displayMessage('user', userInput);
       displayMessage('bot', data.text);
   
-      // Clear the input box
+      // Bersihkan kotak input
       document.getElementById('userInput').value = '';
     }
     
+    // Fungsi untuk menampilkan pesan dalam kotak obrolan
     function displayMessage(role, text) {
         const chatBox = document.getElementById('chatBox');
         const messageDiv = document.createElement('div');
         messageDiv.className = role === 'user' ? 'user-message' : 'bot-message';
 
-        // Create a copy button
+        // Buat tombol salin
         const copyButton = document.createElement('button');
         copyButton.className = 'copy-button';
-        copyButton.innerText = 'Copy';
+        copyButton.innerText = 'Salin';
         copyButton.onclick = function () {
             copyTextToClipboard(text);
         };
 
-        // Append the text and copy button to the message div
+        // Sisipkan teks dan tombol salin ke dalam div pesan
         messageDiv.innerText = text;
         messageDiv.appendChild(copyButton);
 
-        chatBox.appendChild(messageDiv); // This will add the message at the end
+        chatBox.appendChild(messageDiv); // Ini akan menambahkan pesan di akhir
 
-        // Scroll to the bottom to show the latest message
+        // Gulir ke bawah untuk menampilkan pesan terbaru
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
+    // Fungsi untuk memulai obrolan baru dengan menghapus kotak obrolan
     function startNewChat() {
-        // Clear the chat box
+        // Bersihkan kotak obrolan
         document.getElementById('chatBox').innerHTML = '';
     }
 
+    // Fungsi untuk menyalin teks ke clipboard
     function copyTextToClipboard(text) {
         const textarea = document.createElement('textarea');
         textarea.value = text;
