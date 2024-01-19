@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat - SHARIL BOT</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+Wy+8fP8uVS9AFZOEtIt0U1Yz12P1ck7mlf" crossorigin="anonymous">
+    <style>
+        body {
+            background-color: #343a40; /* Dark background color */
+            color: #ffffff; /* Light text color */
+        }
+
+        .chat-container {
+            max-width: 1000px; /* Updated width for chat container */
+            margin: 50px auto;
+            background-color: #212529; /* Dark chat container background color */
+            border: 1px solid #343a40; /* Dark border color */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .chat-box {
+            padding: 45px;
+            height: 400px;
+            overflow-y: auto;
+        }
+
+        .user-message, .bot-message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .user-message {
+            text-align: right;
+            background-color: #007bff;
+            color: #ffffff;
+        }
+
+        .bot-message {
+            text-align: left;
+            background-color: #343a40;
+            color: #ffffff;
+        }
+
+        .input-box {
+            padding: 10px;
+            background-color: #212529; /* Dark input box background color */
+            border-top: 1px solid #343a40; /* Dark border color */
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #userInput {
+            flex-grow: 1;
+            margin-right: 10px;
+            background-color: #343a40; /* Dark input field background color */
+            color: #ffffff; /* Light text color */
+            border: none;
+        }
+
+        .send-button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .send-button:hover {
+            background-color: #0056b3;
+        }
+
+        .copy-button {
+            background-color: #212529;
+            color: #ffffff;
+            border: none;
+            padding: 3px 6px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 10px;
+            margin-left: 5px;
+        }
+
+        .copy-button:hover {
+            background-color: #224b2b;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="chat-container">
+        <div class="chat-box" id="chatBox">
+            <!-- Chat messages will be added here dynamically -->
+        </div>
+        <div class="input-box">
+            <input type="text" id="userInput" class="form-control" placeholder="Type your message..." onkeydown="if (event.key === 'Enter') { event.preventDefault(); sendMessage(); }">
+            <button class="send-button" onclick="sendMessage()">Send</button>
+            <button class="btn btn-secondary mt-2" onclick="startNewChat()">Start New Chat</button>
+        </div>
+    </div>
+</div>
+
+<!-- ... -->
+
+<script>
+    let chatHistory = [];
+  
+    async function sendMessage() {
+      const userInput = document.getElementById('userInput').value;
+  
+      // Send user input and chat history to the server
+      const response = await fetch('/sendMessage', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userInput, chatHistory }),
+      });
+  
+      const data = await response.json();
+  
+      // Update the chat history with the response
+      chatHistory = data.chatHistory;
+  
+      // Display the messages
+      displayMessage('user', userInput);
+      displayMessage('bot', data.text);
+  
+      // Clear the input box
+      document.getElementById('userInput').value = '';
+    }
+    
+    function displayMessage(role, text) {
+        const chatBox = document.getElementById('chatBox');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = role === 'user' ? 'user-message' : 'bot-message';
+
+        // Create a copy button
+        const copyButton = document.createElement('button');
+        copyButton.className = 'copy-button';
+        copyButton.innerText = 'Copy';
+        copyButton.onclick = function () {
+            copyTextToClipboard(text);
+        };
+
+        // Append the text and copy button to the message div
+        messageDiv.innerText = text;
+        messageDiv.appendChild(copyButton);
+
+        chatBox.appendChild(messageDiv); // This will add the message at the end
+
+        // Scroll to the bottom to show the latest message
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function startNewChat() {
+        // Clear the chat box
+        document.getElementById('chatBox').innerHTML = '';
+    }
+
+    function copyTextToClipboard(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+    }
+</script>
+
+</body>
+</html>
