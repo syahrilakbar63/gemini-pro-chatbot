@@ -1,4 +1,3 @@
-// Import modul yang diperlukan
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -8,34 +7,28 @@ const {
   HarmBlockThreshold,
 } = require('@google/generative-ai');
 
-// Membuat aplikasi Express
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
-// Konstanta untuk Google Generative AI
-const MODEL_NAME = 'gemini-pro';
-const API_KEY = 'API_KEY_ANDA'; // API Key Google untuk layanan Google Generative AI
-
-// Menggunakan middleware body-parser untuk memproses permintaan JSON
 app.use(bodyParser.json());
 
-// Array untuk menyimpan riwayat obrolan
+const MODEL_NAME = 'gemini-pro';
+const API_KEY = 'AIzaSyDvB7PBnlSaeootaAoGwRBnwjuk5Ah80KY'; // Ganti dengan API Key Google Generative AI Anda
+
 const chatHistory = [];
 
-// Mengirimkan file index.html pada path root
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.get('/', (_req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Menangani permintaan POST ke endpoint /sendMessage
 app.post('/sendMessage', async (req, res) => {
   const userInput = req.body.userInput;
 
-  // Membuat instance Google Generative AI dan mengambil model
   const genAI = new GoogleGenerativeAI(API_KEY);
   const model = genAI.getGenerativeModel({ model: MODEL_NAME });
 
-  // Konfigurasi untuk menghasilkan respons
   const generationConfig = {
     temperature: 0.9,
     topK: 1,
@@ -43,7 +36,6 @@ app.post('/sendMessage', async (req, res) => {
     maxOutputTokens: 3000,
   };
 
-  // Pengaturan keselamatan untuk memblokir konten berbahaya
   const safetySettings = [
     { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH },
     { category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH },
@@ -51,29 +43,21 @@ app.post('/sendMessage', async (req, res) => {
     { category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH },
   ];
 
-  // Mengambil riwayat obrolan lengkap dari permintaan
-  const chatHistory = req.body.chatHistory || [];
-
-  // Memulai sesi obrolan baru dengan Google Generative AI
   const chat = model.startChat({
     generationConfig,
     safetySettings,
     history: chatHistory,
   });
 
-  // Mengirim input pengguna ke model obrolan dan mendapatkan respons
   const result = await chat.sendMessage(userInput);
   const response = result.response;
 
-  // Memperbarui riwayat obrolan dengan input pengguna dan respons model
   chatHistory.push({ role: 'user', parts: [{ text: userInput }] });
   chatHistory.push({ role: 'model', parts: [{ text: response.text() }] });
 
-  // Mengirim respons model dan riwayat obrolan yang diperbarui sebagai JSON
   res.json({ text: response.text(), chatHistory });
 });
 
-// Inisialisasi server dan mulai mendengarkan pada port yang ditentukan
 let server;
 
 const startServer = () => {
@@ -84,7 +68,6 @@ const startServer = () => {
 
 startServer();
 
-// Menangani pengecualian yang tidak tertangkap dan penolakan yang tidak tertangkap
 process.on('uncaughtException', (err) => {
   console.error('Terjadi pengecualian yang tidak tertangkap:', err);
   console.log('Merestart server...');

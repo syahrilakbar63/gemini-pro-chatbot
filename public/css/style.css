@@ -1,0 +1,129 @@
+body {
+    display: block;
+    justify-content: column;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    font-family: "Google Sans", "Helvetica Neue", sans-serif;
+}
+  
+.dark-theme {
+    background-color: #222;
+    color: #fff;
+}
+  
+.chat-container {
+    width: 80%;
+    max-width: 800px;
+    margin: 0 auto;
+    margin: 0 auto;
+    min-height: 0;
+}
+  
+.chat-header {
+    background-color: #222;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+  
+.chat-messages {
+    background-color: #222;
+    padding: 20px;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+}
+  
+.chat-input {
+    display: flex;
+    padding: 15px;
+    border-radius: 15px;
+    background-color: #2a2a2a;
+}
+  
+.chat-input textarea {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    background-color: #3a3a3a;
+    color: #fff;
+    resize: none;
+    overflow: hidden;
+    font-size: 14px;
+}
+  
+.chat-input button {
+    padding: 10px;
+    margin-left: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+  
+.send-button, .new-chat-button {
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+  
+.send-button:hover {
+    background-color: #3367d6;
+}
+  
+.new-chat-button {
+    background-color: #34a853;
+    color: #fff;
+}
+  
+.new-chat-button:hover {
+    background-color: #2d8dd3;
+}
+  
+.textarea-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+  
+.user-message, .bot-message {
+    min-height: auto;
+    min-width: auto;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 15px;
+    font-size: 16px;
+    font-family: "Google Sans", "Helvetica Neue", sans-serif;
+}
+  
+.user-message {
+    text-align: right;
+    background-color: #3a3a3a;
+    color: #fff;
+    align-self: flex-end;
+}
+  
+.bot-message {
+    text-align: left;
+    background-color: #2a2a2a;
+}
+
+.copy-button {
+    background-color: #212529;
+    color: #ffffff;
+    border: none;
+    padding: 3px 6px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 10px;
+    margin-left: 5px;
+}
+
+.copy-button:hover {
+    background-color: #224b2b;
+}
