@@ -2,13 +2,24 @@ document.addEventListener('DOMContentLoaded', function () {
     const textarea = document.getElementById('messageTextarea');
     const chatMessagesContainer = document.querySelector('.chat-messages');
     const chatHistory = [];
+    let isTouchDevice = false;
+
+    // Check if the device has touch support
+    if ('ontouchstart' in window || navigator.maxTouchPoints) {
+        isTouchDevice = true;
+    }
 
     textarea.addEventListener('input', autoExpandTextarea);
 
     textarea.addEventListener('keydown', function (event) {
-        if (event.key === 'Enter' && !event.shiftKey) {
-            event.preventDefault();
-            sendMessage();
+        if (event.key === 'Enter') {
+            if (isTouchDevice) {
+                event.preventDefault();
+                insertNewLine();
+            } else if (!event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
         }
     });
 
@@ -40,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         textarea.value = '';
-        textarea.style.height = 'auto';
+        autoExpandTextarea();
     };
 
     window.startNewChat = function () {
@@ -52,6 +63,15 @@ document.addEventListener('DOMContentLoaded', function () {
     function autoExpandTextarea() {
         textarea.style.height = 'auto';
         textarea.style.height = textarea.scrollHeight + 'px';
+    }
+
+    function insertNewLine() {
+        const cursorPosition = textarea.selectionStart;
+        const textBefore = textarea.value.substring(0, cursorPosition);
+        const textAfter = textarea.value.substring(cursorPosition);
+
+        textarea.value = textBefore + '\n' + textAfter;
+        autoExpandTextarea();
     }
 
     function updateChatUI() {
@@ -100,5 +120,4 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     document.querySelector(".scroll-to-top").addEventListener("click", scrollToTop);
-
 });

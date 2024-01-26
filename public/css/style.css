@@ -40,11 +40,13 @@ body {
     padding: 15px;
     border-radius: 15px;
     background-color: #2a2a2a;
+    margin-top: 10px;
+    height: 50px;
 }
   
 .chat-input textarea {
     flex: 1;
-    padding: 10px;
+    padding: 3px;
     border: 1px solid #555;
     border-radius: 5px;
     background-color: #3a3a3a;
@@ -52,11 +54,12 @@ body {
     resize: none;
     overflow: hidden;
     font-size: 14px;
+    height: 10px;
 }
   
 .chat-input button {
-    padding: 10px;
-    margin-left: 10px;
+    padding: 2px;
+    margin-left: 7px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -69,7 +72,7 @@ body {
     padding: 5px 10px;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 15px;
 }
   
 .send-button:hover {
@@ -102,7 +105,7 @@ body {
 }
   
 .user-message {
-    text-align: right;
+    text-align: left;
     background-color: #3a3a3a;
     color: #fff;
     align-self: flex-end;
@@ -127,3 +130,15 @@ body {
 .copy-button:hover {
     background-color: #224b2b;
 }
+
+/* Responsiveness */
+
+@media (min-width: 768px) {
+    .chat-input textarea {
+    height: 50px;
+    }
+    
+    .send-button, .new-chat-button {
+    width: 100px;
+    }
+    }
