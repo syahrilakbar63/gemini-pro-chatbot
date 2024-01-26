@@ -26,6 +26,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const message = textarea.value.trim();
         if (message !== '') {
             try {
+                chatHistory.push({ role: 'user', text: message });
+                updateChatUI();
+
                 const response = await fetch('/sendMessage', {
                     method: 'POST',
                     headers: {
@@ -36,20 +39,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 if (response.ok) {
                     const data = await response.json();
-                    chatHistory.push({ role: 'user', text: message });
-                    chatHistory.push({ role: 'bot', text: data.text });
+                    chatHistory.push({ role: 'bot', text: 'Tunggu dulu, masih mikir' });
                     updateChatUI();
+
+                    chatHistory.pop();
+                    chatHistory.push({ role: 'bot', text: data.text });
+
+                    updateChatUI();
+                    scrollToBottom(); // Scroll to bottom after the response is displayed
                 } else {
                     console.error('Failed to send message to server');
+                    chatHistory.push({ role: 'bot', text: 'Yahh error, silahkan refresh atau coba beberapa saat lagi' });
+                    updateChatUI();
                 }
             } catch (error) {
                 console.error('Error sending message:', error);
+                chatHistory.push({ role: 'bot', text: 'Yahh error, silahkan refresh atau coba beberapa saat lagi' });
+                updateChatUI();
             }
         }
 
         textarea.value = '';
         autoExpandTextarea();
-        scrollToBottom();
         autosize.update(textarea);
     };
 
@@ -80,7 +91,9 @@ document.addEventListener('DOMContentLoaded', function () {
             displayMessage(message.role, message.text);
         });
 
-        scrollToBottom();
+        setTimeout(() => {
+            scrollToBottom();
+        }, 0);
     }
 
     function displayMessage(role, text) {
@@ -116,6 +129,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function scrollToBottom() {
         chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+    }
+
+    function isUserLastSender() {
+        const lastMessage = chatHistory[chatHistory.length - 1];
+        return lastMessage && lastMessage.role === 'user';
     }
 
     autosize(textarea);
