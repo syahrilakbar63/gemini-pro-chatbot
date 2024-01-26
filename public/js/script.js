@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const chatHistory = [];
     let isTouchDevice = false;
 
-    // Check if the device has touch support
     if ('ontouchstart' in window || navigator.maxTouchPoints) {
         isTouchDevice = true;
     }
@@ -42,16 +41,16 @@ document.addEventListener('DOMContentLoaded', function () {
                     updateChatUI();
                 } else {
                     console.error('Failed to send message to server');
-                    // Add user-friendly error handling here
                 }
             } catch (error) {
                 console.error('Error sending message:', error);
-                // Add user-friendly error handling here
             }
         }
 
         textarea.value = '';
         autoExpandTextarea();
+        scrollToBottom();
+        autosize.update(textarea);
     };
 
     window.startNewChat = function () {
@@ -71,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const textAfter = textarea.value.substring(cursorPosition);
 
         textarea.value = textBefore + '\n' + textAfter;
-        autoExpandTextarea();
+        autosize.update(textarea);
     }
 
     function updateChatUI() {
@@ -118,6 +117,8 @@ document.addEventListener('DOMContentLoaded', function () {
     function scrollToBottom() {
         chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
     }
+
+    autosize(textarea);
 
     document.querySelector(".scroll-to-top").addEventListener("click", scrollToTop);
 });
