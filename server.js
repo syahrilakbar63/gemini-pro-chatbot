@@ -13,7 +13,7 @@ const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
-const MODEL_NAME = 'gemini-pro';
+const MODEL_NAME = 'gemini-1.0-pro';
 const API_KEY = 'AIzaSyAXLSv9cHScvHzxon0fOHxe22Z_zHI6_Ww'; // Ganti dengan API Key Google Generative AI Anda
 
 let server;
