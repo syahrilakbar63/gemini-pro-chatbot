@@ -37,7 +37,7 @@ Sebelum memulai, pastikan Anda telah menginstal hal-hal berikut:
    npm install express body-parser @google/generative-ai
    ```
 
-4. Dapatkan API Key Google untuk layanan Google Generative AI. Gantilah `API_KEY_ANDA` pada `server.js` dengan API Key Anda yang sebenarnya.
+4. Dapatkan API Key Google untuk layanan Google Generative AI. Gantilah `API_KEY` pada `server.js` dengan API Key Anda yang sebenarnya.
 
 5. Mulai server:
 
